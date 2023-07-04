@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc707bc4b12fbb44ca9919f78fbb27e6, type: 3}
   m_Name: chunk_E_entry-1
   m_EditorClassIdentifier: 
-  chunkName: chunk_W_entry-1
+  chunkName: chunk_E_entry-1
   northExits: []
   southExits: []
   eastExits: []
   westExits:
   - exitPosition: 0
-    z_position: 0
+    z_position: -4
   - exitPosition: 1
-    z_position: 0
+    z_position: -4
   - exitPosition: 2
     z_position: 0
