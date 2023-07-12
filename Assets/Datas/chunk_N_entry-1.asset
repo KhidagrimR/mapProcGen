@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc707bc4b12fbb44ca9919f78fbb27e6, type: 3}
   m_Name: chunk_N_entry-1
   m_EditorClassIdentifier: 
-  chunkName: chunk_S_entry-1
+  chunkName: chunk_N_entry-1
   northExits: []
   southExits:
   - exitPosition: 0

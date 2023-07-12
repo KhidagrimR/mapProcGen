@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc707bc4b12fbb44ca9919f78fbb27e6, type: 3}
-  m_Name: chunk_S_entry-1
+  m_Name: chunk_S-E_hackOnOff-1
   m_EditorClassIdentifier: 
-  chunkName: chunk_S_entry-1
-  northExits:
+  chunkName: chunk_S-E_hackOnOff-1
+  northExits: []
+  southExits:
   - exitPosition: 0
     z_position: 0
   - exitPosition: 1
     z_position: 0
+  eastExits:
+  - exitPosition: 0
+    z_position: 0
   - exitPosition: 2
     z_position: 0
-  southExits: []
-  eastExits: []
   westExits: []
