@@ -15,11 +15,11 @@ MonoBehaviour:
   chunkName: chunk_E_entry-1
   northExits: []
   southExits: []
-  eastExits: []
-  westExits:
+  eastExits:
   - exitPosition: 0
     z_position: -4
   - exitPosition: 1
     z_position: -4
   - exitPosition: 2
     z_position: 0
+  westExits: []

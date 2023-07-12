@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: chunk_S_entry-1
   m_EditorClassIdentifier: 
   chunkName: chunk_S_entry-1
-  northExits:
+  northExits: []
+  southExits:
   - exitPosition: 0
     z_position: 0
   - exitPosition: 1
     z_position: 0
   - exitPosition: 2
     z_position: 0
-  southExits: []
   eastExits: []
   westExits: []
