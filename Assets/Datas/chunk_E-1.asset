@@ -17,9 +17,9 @@ MonoBehaviour:
   southExits: []
   eastExits:
   - exitPosition: 0
-    z_position: 0
+    z_position: -4
   - exitPosition: 1
-    z_position: 0
+    z_position: -4
   - exitPosition: 2
     z_position: 0
   westExits: []

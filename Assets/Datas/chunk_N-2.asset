@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunkName: chunk_N-2
   northExits:
-  - exitPosition: 1
+  - exitPosition: 0
     z_position: 0
-  - exitPosition: 2
-    z_position: 10
   southExits: []
   eastExits: []
   westExits: []

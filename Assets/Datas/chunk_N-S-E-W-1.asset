@@ -16,24 +16,14 @@ MonoBehaviour:
   northExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 1
-    z_position: 6
-  - exitPosition: 2
-    z_position: 6
   southExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 0
-    z_position: 0
-  - exitPosition: 0
+  - exitPosition: 1
     z_position: 0
   eastExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 1
-    z_position: 0
-  - exitPosition: 2
-    z_position: 6
   westExits:
-  - exitPosition: 1
-    z_position: 6
+  - exitPosition: 0
+    z_position: 0

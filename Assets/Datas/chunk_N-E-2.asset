@@ -16,12 +16,12 @@ MonoBehaviour:
   northExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 1
+  - exitPosition: 2
     z_position: 0
   southExits: []
   eastExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 2
+  - exitPosition: 1
     z_position: 0
   westExits: []

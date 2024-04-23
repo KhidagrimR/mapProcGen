@@ -23,5 +23,3 @@ MonoBehaviour:
   westExits:
   - exitPosition: 0
     z_position: 0
-  - exitPosition: 2
-    z_position: -10
