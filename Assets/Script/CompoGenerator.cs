@@ -27,6 +27,8 @@ public class CompoGenerator : MonoBehaviour
 {
     public int mapSize = 3;
     public List<ChunkData> chunkDatas;
+    public List<ChunkData> chunkEnds; // in 8*8
+    public List<ChunkData> chunkBridges; // in 8*8
 
     public CompoGeneratorParameters compoParam;
     public enum Directions { North, South, West, East, Null }

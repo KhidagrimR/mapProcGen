@@ -435,6 +435,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2291665746f116d46a5c7df13e8a418d, type: 2}
   - {fileID: 11400000, guid: 425c74450a147f947a49ebd16f368aff, type: 2}
   - {fileID: 11400000, guid: e5dd3c5f22602a249807f36610595f21, type: 2}
+  chunkEnds:
+  - {fileID: 11400000, guid: 5c42b5c820fcde246a85ffbd7d8a517a, type: 2}
+  - {fileID: 11400000, guid: dc62a788b4c03774ab8508132718675f, type: 2}
+  - {fileID: 11400000, guid: 2ef448c04a120de47b9845cba6ec72d8, type: 2}
+  - {fileID: 11400000, guid: c3017c9c8f872f743a809db2f165483a, type: 2}
+  chunkBridges: []
   chunkConnexionDatas: []
 --- !u!4 &663800924
 Transform:
