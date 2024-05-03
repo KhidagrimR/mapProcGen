@@ -4,7 +4,7 @@ using UnityEngine;
 public class TextWriter : MonoBehaviour
 {
     public static string fileName = "test.compo.json"; // Nom du fichier à créer/écrire
-    public static string path = "C:\\Users\\Tristan\\Documents\\GitProjects\\deathtower\\res\\editor\\compo";//"C:\\Users\\tristan\\Documents\\deathtower\\res\\editor\\compo"; //
+    public static string path = "D:\\Headbang\\DeathTower\\deathtower\\res\\editor\\compo";//"C:\\Users\\Tristan\\Documents\\GitProjects\\deathtower\\res\\editor\\compo";//"C:\\Users\\tristan\\Documents\\deathtower\\res\\editor\\compo"; //
 
     public static void Write(string textToWrite)
     {

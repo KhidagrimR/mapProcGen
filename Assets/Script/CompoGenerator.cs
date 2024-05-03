@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using Random = UnityEngine.Random;
+using Unity.VisualScripting;
 
 public class CompoGeneratorParameters
 {
@@ -34,7 +35,7 @@ public class CompoGenerator : MonoBehaviour
     public enum Directions { North, South, West, East, Null }
 
     //public ChunkData[] map;
-    public ChunkConnexionData[] chunkConnexionDatas;
+    public List<ChunkConnexionData> chunkConnexionDatas;
 
     [Serializable]
     public struct ChunkConnexionData
@@ -42,6 +43,7 @@ public class CompoGenerator : MonoBehaviour
         public ChunkData chunkData;
         public Vector3 position;
         public List<Directions> connexionDirection;
+        public List<Directions> remainingDirections;
         public ChunkConnexionData(ChunkData p_chunkData, Vector3 p_position, Directions p_connexionDirection)
         {
             chunkData = p_chunkData;
@@ -49,6 +51,17 @@ public class CompoGenerator : MonoBehaviour
 
             connexionDirection = new List<Directions>();
             connexionDirection.Add(p_connexionDirection);
+
+            remainingDirections = new List<Directions>();
+
+            if (chunkData.northExits.Any())
+                remainingDirections.Add(Directions.North);
+            else if (chunkData.southExits.Any())
+                remainingDirections.Add(Directions.South);
+            else if (chunkData.eastExits.Any())
+                remainingDirections.Add(Directions.East);
+            else if (chunkData.westExits.Any())
+                remainingDirections.Add(Directions.West);
         }
     }
 
@@ -64,10 +77,10 @@ public class CompoGenerator : MonoBehaviour
     void GenerateAMap()
     {
         // we want to make a map of size Mapsize
-        chunkConnexionDatas = new ChunkConnexionData[mapSize];
+        chunkConnexionDatas = new List<ChunkConnexionData>();
 
         // we start with a random chunk
-        chunkConnexionDatas[0] = new ChunkConnexionData(chunkDatas[Random.Range(0, chunkDatas.Count)], new Vector3(0, 0, 0), Directions.Null); // "Directions.North" is arbitrary here and don't do anything
+        chunkConnexionDatas.Add(new ChunkConnexionData(chunkDatas[Random.Range(0, chunkDatas.Count)], new Vector3(0, 0, 0), Directions.Null)); // "Directions.North" is arbitrary here and don't do anything
         Debug.Log("Chosen chunk = " + chunkConnexionDatas[0].chunkData.chunkName);
 
 
@@ -86,43 +99,23 @@ public class CompoGenerator : MonoBehaviour
             Directions chosenDirection = InvertDirection(directionMatched[Random.Range(0, directionMatched.Count)]);
 
             // On ajoute le chunk choisis
-            chunkConnexionDatas[i + 1] = new ChunkConnexionData(matchableChunk, GetPositionFromDirection(chosenDirection, chunkConnexionDatas[i].position), chosenDirection);
+            ChunkConnexionData ccd = new ChunkConnexionData(matchableChunk, GetPositionFromDirection(chosenDirection, chunkConnexionDatas[i].position), chosenDirection);
+            chunkConnexionDatas.Add(ccd);
+            ccd.remainingDirections.Remove(chosenDirection);
             Debug.Log("<color=red>======</color>");
-            Debug.Log("Targetted Direction = "+chosenDirection);
-            Debug.Log("current chunk pos = " + chunkConnexionDatas[i + 1].position.z);
-            Debug.Log("Position of current chunk exit = "+chunkConnexionDatas[i + 1].chunkData.GetExitsFromDirection(chosenDirection).z_position);
-            Debug.Log("previous chunk pos = " +  chunkConnexionDatas[i].position.z );
-            Debug.Log("Position of previous chunk exit = "+chunkConnexionDatas[i].chunkData.GetExitsFromDirection(InvertDirection(chosenDirection)).z_position);
+            Debug.Log("Targetted Direction = " + chosenDirection);
+            Debug.Log("current chunk pos = " + ccd.position.z);
+            Debug.Log("Position of current chunk exit = " + ccd.chunkData.GetExitsFromDirection(chosenDirection).z_position);
+            Debug.Log("previous chunk pos = " + chunkConnexionDatas[i].position.z);
+            Debug.Log("Position of previous chunk exit = " + chunkConnexionDatas[i].chunkData.GetExitsFromDirection(InvertDirection(chosenDirection)).z_position);
             Debug.Log("<color=red>======</color>");
 
-            chunkConnexionDatas[i + 1].position.z = chunkConnexionDatas[i].position.z +
+            ccd.position.z = chunkConnexionDatas[i].position.z +
                                                         chunkConnexionDatas[i].chunkData.GetExitsFromDirection(InvertDirection(chosenDirection)).z_position -
-                                                        chunkConnexionDatas[i + 1].chunkData.GetExitsFromDirection(chosenDirection).z_position;
+                                                        ccd.chunkData.GetExitsFromDirection(chosenDirection).z_position;
         }
 
-        #region removed
-        /*
-        // ## ADD FIRST CHUNK ## //
-        // On rajoute un chunk sur l'une de ses exits available
-        ChunkData matchableChunk = chunkDatas.Find(x => IsChunkMatching(chunkConnexionDatas[0].chunkData, x, chunkConnexionDatas[0].connexionDirection));
-        // is chunkMatching add all available connexions to the var "directionMatched"
-        Directions chosenDirection = directionMatched[Random.Range(0, directionMatched.Count)];
-
-        // On ajoute le chunk choisis
-        chunkConnexionDatas[1] = new ChunkConnexionData(matchableChunk, GetPositionFromDirection(chosenDirection, chunkConnexionDatas[0].position), chosenDirection);
-
-
-        // ----------------  REPEAT
-        chunkDatas = Shuffle<ChunkData>(chunkDatas);
-        // On rajoute un chunk sur l'une de ses exits available
-        matchableChunk = chunkDatas.Find(x => IsChunkMatching(chunkConnexionDatas[1].chunkData, x, chunkConnexionDatas[1].connexionDirection));
-        // is chunkMatching add all available connexions to the var "directionMatched"
-        chosenDirection = directionMatched[Random.Range(0, directionMatched.Count)];
-        // On ajoute le chunk choisis
-        chunkConnexionDatas[2] = new ChunkConnexionData(matchableChunk, GetPositionFromDirection(chosenDirection, chunkConnexionDatas[1].position), chosenDirection);
-        */
-        #endregion
-
+        chunkConnexionDatas = CleanRemainingExits(chunkConnexionDatas); // add an ends to remaining exits
     }
 
     List<Directions> directionMatched;
@@ -285,7 +278,7 @@ public class CompoGenerator : MonoBehaviour
     }
 
 
-    public string ChunkToString(ChunkConnexionData[] p_chunkDatasList)
+    public string ChunkToString(List<ChunkConnexionData> p_chunkDatasList)
     {
         string str = "{ \"chunks\" : [ ";
         int index = 0;
@@ -310,61 +303,58 @@ public class CompoGenerator : MonoBehaviour
         return str;
     }
 
+    public List<ChunkConnexionData> CleanRemainingExits(List<ChunkConnexionData> p_chunkConnexionDatas)
+    {
+        for (int i = 0, n = p_chunkConnexionDatas.Count; i < n; i++) // pour chaque chunk
+        {
+            for (int j = 0, m = p_chunkConnexionDatas[i].remainingDirections.Count; j < m; j++) // pour chacune des directions qu'il lui reste à remplir
+            {
+                switch (p_chunkConnexionDatas[i].remainingDirections[j])
+                {
+                    case Directions.North:
+                        int index = 0;
+                        foreach (ChunkData.Exit ex in p_chunkConnexionDatas[i].chunkData.northExits)
+                        {
+                            Vector3 exitPos = p_chunkConnexionDatas[i].chunkData.GetNorthExitPosition(index);
+                            ChunkConnexionData endChunk = new ChunkConnexionData(chunkEnds.Find(x => x.northExits.Any()), exitPos, Directions.North);
+                            index++;
+                            p_chunkConnexionDatas.Add(endChunk);
+                        }
+                        break;
+                    case Directions.South:
+                        index = 0;
+                        foreach (ChunkData.Exit ex in p_chunkConnexionDatas[i].chunkData.southExits)
+                        {
+                            Vector3 exitPos = p_chunkConnexionDatas[i].chunkData.GetSouthExitPosition(index);
+                            ChunkConnexionData endChunk = new ChunkConnexionData(chunkEnds.Find(x => x.southExits.Any()), exitPos, Directions.South);
+                            index++;
+                            p_chunkConnexionDatas.Add(endChunk);
+                        }
+                        break;
+                    case Directions.East:
+                        index = 0;
+                        foreach (ChunkData.Exit ex in p_chunkConnexionDatas[i].chunkData.eastExits)
+                        {
+                            Vector3 exitPos = p_chunkConnexionDatas[i].chunkData.GetEastExitPosition(index);
+                            ChunkConnexionData endChunk = new ChunkConnexionData(chunkEnds.Find(x => x.eastExits.Any()), exitPos, Directions.East);
+                            index++;
+                            p_chunkConnexionDatas.Add(endChunk);
+                        }
+                        break;
+                    case Directions.West:
+                        index = 0;
+                        foreach (ChunkData.Exit ex in p_chunkConnexionDatas[i].chunkData.westExits)
+                        {
+                            Vector3 exitPos = p_chunkConnexionDatas[i].chunkData.GetWestExitPosition(index);
+                            ChunkConnexionData endChunk = new ChunkConnexionData(chunkEnds.Find(x => x.westExits.Any()), exitPos, Directions.West);
+                            index++;
+                            p_chunkConnexionDatas.Add(endChunk);
+                        }
+                        break;
+                }
 
+            }
+        }
+        return p_chunkConnexionDatas;
+    }
 }
-
-/*
-void GenerateMap()
-{
-      // we want to make a map of size Mapsize
-        map = new ChunkData[mapSize];
-
-        // we start with a random chunk
-        map[0] = chunkDatas[Random.Range(0, chunkDatas.Count)];
-
-
-        int exitIndex = 0;
-        // for each of that chunk's exit, we add a new chunk nearby or stop the generation if we exceed the amount of chunk
-        for(int i = 0, n = map[0].allExits.Count; i < n; i++)
-        {
-            // on trouve un chunck qui peut "matcher"
-            ChunkData[] matchableChunk = chunkDatas.FindAll(x => IsChunkMatching(map[i], x).Any()).ToArray(); 
-            map[i+1] = matchableChunk[Random.Range(0, matchableChunk.Length)]; // et on l'ajoute
-
-            // puis on ajoute la connexion
-            List<Directions> listDir = IsChunkMatching(map[i], map[i+1]);
-            Directions dir = listDir[Random.Range(0, listDir.Count)];
-            chunksConnexionsDict.Add(dir.ToString(), InvertDirection(dir).ToString());
-
-            if(mapSize <= i+1) // si on a le max chunk amount
-                break; // on termine
-        }
-        exitIndex++;
-
-        // si on a pas mis assez de chunks, on regarde si il reste encore des sorties utilisables
-        // si oui
-        if(map[exitIndex].allExits.Count - 1 > 0)
-        {
-            
-        }
-        // si non
-        else
-        {
-
-        }
-
-        // puis on transform notre tableau en JSON
-
-
-
-        //
-        for (int i = 0, n = mapSize - 1; i < n; i++)
-        {
-            // ce chunk a plusieurs entrées/sorties, on va donc prendre un nouveau chunk dont les entrées sorties coincident
-            ChunkData[] matchableChunk = chunkDatas.FindAll(x => IsChunkMatching(map[i], x).Any()).ToArray();
-            map[i+1] = matchableChunk[Random.Range(0, matchableChunk.Length)];
-
-
-            // We might need to exit the loop when there is no more exits
-        }//
-}*/

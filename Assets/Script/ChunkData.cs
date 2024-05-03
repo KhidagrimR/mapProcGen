@@ -53,30 +53,122 @@ public class ChunkData : ScriptableObject
         }
     }
 
-    public Exit GetExitsFromDirection(CompoGenerator.Directions directions, Exit.ExitPos[] matchableExits = null )
+    public Exit GetExitsFromDirection(CompoGenerator.Directions directions, Exit.ExitPos[] matchableExits = null)
     {
         switch (directions)
         {
             case CompoGenerator.Directions.East:
-                return eastExits.FindAll(x => HasMatchableExit(x,matchableExits))[Random.Range(0, eastExits.Count)];
+                return eastExits.FindAll(x => HasMatchableExit(x, matchableExits))[Random.Range(0, eastExits.Count)];
             case CompoGenerator.Directions.West:
-                return westExits.FindAll(x => HasMatchableExit(x,matchableExits))[Random.Range(0, westExits.Count)];
+                return westExits.FindAll(x => HasMatchableExit(x, matchableExits))[Random.Range(0, westExits.Count)];
             case CompoGenerator.Directions.North:
-                return northExits.FindAll(x => HasMatchableExit(x,matchableExits))[Random.Range(0, northExits.Count)];
+                return northExits.FindAll(x => HasMatchableExit(x, matchableExits))[Random.Range(0, northExits.Count)];
             case CompoGenerator.Directions.South:
-                return southExits.FindAll(x => HasMatchableExit(x,matchableExits))[Random.Range(0, southExits.Count)];
+                return southExits.FindAll(x => HasMatchableExit(x, matchableExits))[Random.Range(0, southExits.Count)];
         }
         return new Exit();
     }
 
-    bool HasMatchableExit(Exit exit, Exit.ExitPos[] matchableExits )
+    public Vector3 GetNorthExitPosition(int index) // NORTH
     {
-        if(matchableExits == null)
+        Exit ex = northExits[index];
+        Vector3 exPos = new Vector3();
+
+        switch (ex.exitPosition)
+        {
+            case Exit.ExitPos.center:
+                exPos = new Vector3(0, -24, ex.z_position);
+                break;
+
+            case Exit.ExitPos.left:
+                exPos = new Vector3(-8, -24, ex.z_position);
+                break;
+
+            case Exit.ExitPos.right:
+                exPos = new Vector3(8, -24, ex.z_position);
+                break;
+        }
+
+        return exPos;
+    }
+
+    public Vector3 GetSouthExitPosition(int index) // SOUTH
+    {
+        Exit ex = southExits[index];
+        Vector3 exPos = new Vector3();
+
+        switch (ex.exitPosition)
+        {
+            case Exit.ExitPos.center:
+                exPos = new Vector3(0, 24, ex.z_position);
+                break;
+
+            case Exit.ExitPos.left:
+                exPos = new Vector3(8, 24, ex.z_position);
+                break;
+
+            case Exit.ExitPos.right:
+                exPos = new Vector3(-8, 24, ex.z_position);
+                break;
+        }
+
+        return exPos;
+    }
+
+    public Vector3 GetEastExitPosition(int index) // East
+    {
+        Exit ex = eastExits[index];
+        Vector3 exPos = new Vector3();
+
+        switch (ex.exitPosition)
+        {
+            case Exit.ExitPos.center:
+                exPos = new Vector3(24, 0, ex.z_position);
+                break;
+
+            case Exit.ExitPos.left:
+                exPos = new Vector3(24, -8, ex.z_position);
+                break;
+
+            case Exit.ExitPos.right:
+                exPos = new Vector3(24, 8, ex.z_position);
+                break;
+        }
+
+        return exPos;
+    }
+
+    public Vector3 GetWestExitPosition(int index) // WEST
+    {
+        Exit ex = westExits[index];
+        Vector3 exPos = new Vector3();
+
+        switch (ex.exitPosition)
+        {
+            case Exit.ExitPos.center:
+                exPos = new Vector3(24, 0, ex.z_position);
+                break;
+
+            case Exit.ExitPos.left:
+                exPos = new Vector3(24, 8, ex.z_position);
+                break;
+
+            case Exit.ExitPos.right:
+                exPos = new Vector3(24, -8, ex.z_position);
+                break;
+        }
+
+        return exPos;
+    }
+
+    bool HasMatchableExit(Exit exit, Exit.ExitPos[] matchableExits)
+    {
+        if (matchableExits == null)
             return true;
 
-        for(int i = 0, n = matchableExits.Length; i < n; i++)
+        for (int i = 0, n = matchableExits.Length; i < n; i++)
         {
-            if(exit.exitPosition == matchableExits[i])
+            if (exit.exitPosition == matchableExits[i])
                 return true;
         }
 
